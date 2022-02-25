@@ -18,18 +18,15 @@ if (process.env.PG_CONNECTION_STRING) {
 const pool = createPool(process.env.PG_CONNECTION_STRING)
 
 const allRecipes = pool.connect(async (connection) => {
-  const recipes = await connection.many(sql`SELECT * FROM recipe`)
-  return recipes
+  return await connection.many(sql`SELECT * FROM recipe`)
 });
 
 const allIngredients = pool.connect(async (connection) => {
-  const ingredients = await connection.many(sql`SELECT * FROM ingredient`)
-  return ingredients
+  return await connection.many(sql`SELECT * FROM ingredient`)
 })
 
 const allMeals = pool.connect(async (connection) => {
-  const meals = await connection.many(sql`SELECT * FROM meal`)
-  return meals
+  return await connection.many(sql`SELECT * FROM meal`)
 })
 
 app.get('/', (req, res) => {
