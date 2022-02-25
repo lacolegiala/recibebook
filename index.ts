@@ -17,33 +17,30 @@ if (process.env.PG_CONNECTION_STRING) {
 
 const pool = createPool(process.env.PG_CONNECTION_STRING)
 
-const allRecipes = pool.connect(async (connection) => {
-  return await connection.many(sql`SELECT * FROM recipe`)
-});
-
-const allIngredients = pool.connect(async (connection) => {
-  return await connection.many(sql`SELECT * FROM ingredient`)
-})
-
-const allMeals = pool.connect(async (connection) => {
-  return await connection.many(sql`SELECT * FROM meal`)
-})
-
 app.get('/', (req, res) => {
   res.send('Welcome to your virtual recipe book!')
 })
 
 app.get('/recipes', async (req, res) => {
+  const allRecipes = pool.connect(async (connection) => {
+    return await connection.many(sql`SELECT * FROM recipe`)
+  });
   const recipes = await allRecipes
   res.send(recipes)
 })
 
 app.get('/ingredients', async (req, res) => {
+  const allIngredients = pool.connect(async (connection) => {
+    return await connection.many(sql`SELECT * FROM ingredient`)
+  })
   const ingredients = await allIngredients
   res.send(ingredients)
 })
 
 app.get('/meals', async (req, res) => {
+  const allMeals = pool.connect(async (connection) => {
+    return await connection.many(sql`SELECT * FROM meal`)
+  })
   const meals = await allMeals
   res.send(meals)
 })
