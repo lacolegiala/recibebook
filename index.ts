@@ -4,14 +4,6 @@ const port = 3000;
 import { createPool, sql } from "slonik";
 import * as dotenv from "dotenv";
 import { body, validationResult } from "express-validator";
-import internal from "stream";
-
-type Recipe = {
-  id: number,
-  name: string,
-  method: string | null,
-  servings: number | null
-}
 
 dotenv.config();
 
@@ -73,11 +65,16 @@ app.get("/meals/:id", async (req, res) => {
 
 app.get("/recipes/:id", async (req, res) => {
   const id = req.params.id;
-  const recipe: Recipe = await pool.connect((connection) =>
-    connection.one(sql`
-      SELECT * FROM recipe WHERE id=${id}
-    `)
-  )
+  let recipe
+  try {
+    recipe = await pool.connect((connection) =>
+      connection.one(sql`
+        SELECT * FROM recipe WHERE id=${id}
+      `)
+    )
+  } catch {
+    return res.status(404).json('Recipe id not found')
+  }
   const ingredients = await pool.connect((connection) =>
     connection.many(sql`
       SELECT ingredient.name, recipeingredient.amount, recipeingredient.unit
