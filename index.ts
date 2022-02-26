@@ -17,7 +17,7 @@ if (process.env.PG_CONNECTION_STRING) {
   throw new Error('Connection string environment variable is not set')
 }
 
-const pool = createPool(process.env.PG_CONNECTION_STRING)
+const pool = createPool(connectionString)
 
 app.get('/', (req, res) => {
   res.send('Welcome to your virtual recipe book!')
