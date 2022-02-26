@@ -8,6 +8,8 @@ import * as dotenv from "dotenv";
 
 dotenv.config()
 
+app.use(express.json())
+
 let connectionString: string
 if (process.env.PG_CONNECTION_STRING) {
   connectionString = process.env.PG_CONNECTION_STRING
@@ -43,6 +45,42 @@ app.get('/meals', async (req, res) => {
   })
   const meals = await allMeals
   res.send(meals)
+})
+
+app.post('/recipes', async (req, res) => {
+  const recipe: {name: string, method: string, servings: number} = req.body
+  const addRecipe = pool.connect(async (connection) => {
+    return await connection.query(sql`
+      INSERT INTO recipe (name, method, servings)
+      VALUES (${recipe.name}, ${recipe.method}, ${recipe.servings})
+    `)
+  })
+  const addedRecipe = await addRecipe
+  res.send(addedRecipe)
+})
+
+app.post('/ingredients', async (req, res) => {
+  const ingredient: {name: string, foodGroup: string} = req.body
+  const addIngredient = pool.connect(async (connection) => {
+    return await connection.query(sql`
+      INSERT INTO ingredient (name, foodGroup)
+      VALUES (${ingredient.name}, ${ingredient.foodGroup})
+    `)
+  })
+  const addedIngredient = await addIngredient
+  res.send(addedIngredient)
+})
+
+app.post('/meals', async (req, res) => {
+  const meal: {name: string} = req.body
+  const addMeal = pool.connect(async (connection) => {
+    return await connection.query(sql`
+      INSERT INTO meal (name)
+      VALUES (${meal.name})
+    `)
+  })
+  const addedMeal = await addMeal
+  res.send(addedMeal)
 })
 
 app.listen(port, () => {

@@ -1,0 +1,7 @@
+POST http://localhost:3000/ingredients
+Content-Type: application/json
+
+{
+  "name": "spinach",
+  "foodGroup": "vegetables"
+}
