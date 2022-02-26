@@ -2,7 +2,7 @@ POST http://localhost:3000/recipes
 content-type: application/json
 
 {
-  "name": "pinaattilätyt",
-  "method": "Sekoita ainekset keskenään ja anna turvota 30 min. Paista pannulla ja tarjoile esim. marjojen kanssa.",
-  "servings": 12
+  "name": "valkosipuliperunat",
+  "method": "Sekoita ainekset keskenään uunivuoassa ja paista uunissa 45 min.",
+  "servings": 6
 }
