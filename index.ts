@@ -47,6 +47,39 @@ app.get('/meals', async (req, res) => {
   res.send(meals)
 })
 
+app.get('/recipes/:id', async (req, res) => {
+  const id = req.params.id
+  const getRecipe = pool.connect(async (connection) => {
+    return await connection.many(sql`
+      SELECT * FROM recipe WHERE id=${id}
+    `)
+  })
+  const recipe = await getRecipe
+  res.send(recipe)
+})
+
+app.get('/ingredients/:id', async (req, res) => {
+  const id = req.params.id
+  const getIngredient = pool.connect(async (connection) => {
+    return await connection.many(sql`
+      SELECT * FROM ingredient WHERE id=${id}
+    `)
+  })
+  const ingredient = await getIngredient
+  res.send(ingredient)
+})
+
+app.get('/meals/:id', async (req, res) => {
+  const id = req.params.id
+  const getMeal = pool.connect(async (connection) => {
+    return await connection.many(sql`
+      SELECT * FROM meal WHERE id=${id}
+    `)
+  })
+  const meal = await getMeal
+  res.send(meal)
+})
+
 app.post('/recipes', async (req, res) => {
   const recipe: {name: string, method: string, servings: number} = req.body
   const addRecipe = pool.connect(async (connection) => {
