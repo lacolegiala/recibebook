@@ -27,24 +27,21 @@ app.get('/recipes', async (req, res) => {
   const allRecipes = pool.connect(async (connection) => {
     return await connection.many(sql`SELECT * FROM recipe`)
   });
-  const recipes = await allRecipes
-  res.send(recipes)
+  res.send(await allRecipes)
 })
 
 app.get('/ingredients', async (req, res) => {
   const allIngredients = pool.connect(async (connection) => {
     return await connection.many(sql`SELECT * FROM ingredient`)
   })
-  const ingredients = await allIngredients
-  res.send(ingredients)
+  res.send(await allIngredients)
 })
 
 app.get('/meals', async (req, res) => {
   const allMeals = pool.connect(async (connection) => {
     return await connection.many(sql`SELECT * FROM meal`)
   })
-  const meals = await allMeals
-  res.send(meals)
+  res.send(await allMeals)
 })
 
 app.get('/recipes/:id', async (req, res) => {
@@ -54,8 +51,7 @@ app.get('/recipes/:id', async (req, res) => {
       SELECT * FROM recipe WHERE id=${id}
     `)
   })
-  const recipe = await getRecipe
-  res.send(recipe)
+  res.send(await getRecipe)
 })
 
 app.get('/ingredients/:id', async (req, res) => {
@@ -65,8 +61,7 @@ app.get('/ingredients/:id', async (req, res) => {
       SELECT * FROM ingredient WHERE id=${id}
     `)
   })
-  const ingredient = await getIngredient
-  res.send(ingredient)
+  res.send(await getIngredient)
 })
 
 app.get('/meals/:id', async (req, res) => {
@@ -76,8 +71,7 @@ app.get('/meals/:id', async (req, res) => {
       SELECT * FROM meal WHERE id=${id}
     `)
   })
-  const meal = await getMeal
-  res.send(meal)
+  res.send(await getMeal)
 })
 
 app.post('/recipes', async (req, res) => {
@@ -88,8 +82,7 @@ app.post('/recipes', async (req, res) => {
       VALUES (${recipe.name}, ${recipe.method}, ${recipe.servings})
     `)
   })
-  const addedRecipe = await addRecipe
-  res.send(addedRecipe)
+  res.send(await addRecipe)
 })
 
 app.post('/ingredients', async (req, res) => {
@@ -100,8 +93,7 @@ app.post('/ingredients', async (req, res) => {
       VALUES (${ingredient.name}, ${ingredient.foodGroup})
     `)
   })
-  const addedIngredient = await addIngredient
-  res.send(addedIngredient)
+  res.send(await addIngredient)
 })
 
 app.post('/meals', async (req, res) => {
@@ -112,8 +104,7 @@ app.post('/meals', async (req, res) => {
       VALUES (${meal.name})
     `)
   })
-  const addedMeal = await addMeal
-  res.send(addedMeal)
+  res.send(await addMeal)
 })
 
 app.listen(port, () => {
