@@ -53,16 +53,6 @@ app.get("/ingredients/:id", async (req, res) => {
   res.send(getIngredient);
 });
 
-app.get("/meals/:id", async (req, res) => {
-  const id = req.params.id;
-  const getMeal = await pool.connect((connection) =>
-    connection.many(sql`
-      SELECT * FROM meal WHERE id=${id}
-    `)
-  );
-  res.send(getMeal);
-});
-
 app.get("/recipes/:id", async (req, res) => {
   const id = req.params.id;
   let recipe
@@ -86,7 +76,6 @@ app.get("/recipes/:id", async (req, res) => {
       WHERE recipe.id=${id};
     `)
   );
-  console.log('aaa', ingredients)
   const meals = await pool.connect((connection) =>
     connection.query(sql`
       SELECT meal.name
