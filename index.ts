@@ -76,7 +76,7 @@ app.get("/recipes/:id", async (req, res) => {
     return res.status(404).json('Recipe id not found')
   }
   const ingredients = await pool.connect((connection) =>
-    connection.many(sql`
+    connection.query(sql`
       SELECT ingredient.name, recipeingredient.amount, recipeingredient.unit
       FROM recipe
       JOIN recipeingredient
@@ -86,8 +86,9 @@ app.get("/recipes/:id", async (req, res) => {
       WHERE recipe.id=${id};
     `)
   );
+  console.log('aaa', ingredients)
   const meals = await pool.connect((connection) =>
-    connection.many(sql`
+    connection.query(sql`
       SELECT meal.name
       FROM recipe
       JOIN recipemeal
@@ -97,7 +98,7 @@ app.get("/recipes/:id", async (req, res) => {
       WHERE recipe.id=${id}
     `)
   )
-  const recipeWithDetails = {recipe: recipe, ingredients: ingredients, meals: meals}
+  const recipeWithDetails = {recipe: recipe, ingredients: ingredients.rows, meals: meals.rows}
   res.send(recipeWithDetails);
 });
 
