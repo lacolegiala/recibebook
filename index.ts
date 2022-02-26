@@ -4,6 +4,14 @@ const port = 3000;
 import { createPool, sql } from "slonik";
 import * as dotenv from "dotenv";
 import { body, validationResult } from "express-validator";
+import internal from "stream";
+
+type Recipe = {
+  id: number,
+  name: string,
+  method: string | null,
+  servings: number | null
+}
 
 dotenv.config();
 
@@ -43,16 +51,6 @@ app.get("/meals", async (req, res) => {
   res.send(allMeals);
 });
 
-app.get("/recipes/:id", async (req, res) => {
-  const id = req.params.id;
-  const getRecipe = await pool.connect((connection) =>
-    connection.many(sql`
-      SELECT * FROM recipe WHERE id=${id}
-    `)
-  );
-  res.send(getRecipe);
-});
-
 app.get("/ingredients/:id", async (req, res) => {
   const id = req.params.id;
   const getIngredient = await pool.connect((connection) =>
@@ -73,17 +71,37 @@ app.get("/meals/:id", async (req, res) => {
   res.send(getMeal);
 });
 
-app.get("/recipes/:id/details", async (req, res) => {
+app.get("/recipes/:id", async (req, res) => {
   const id = req.params.id;
-  const getDetails = await pool.connect((connection) =>
+  const recipe: Recipe = await pool.connect((connection) =>
+    connection.one(sql`
+      SELECT * FROM recipe WHERE id=${id}
+    `)
+  )
+  const ingredients = await pool.connect((connection) =>
     connection.many(sql`
-      SELECT ingredient.name FROM ingredient
-      JOIN recipeingredient ON recipeingredient.ingredientid = ingredient.id
-      JOIN recipe ON recipe.id = recipeingredient.recipeid
+      SELECT ingredient.name, recipeingredient.amount, recipeingredient.unit
+      FROM recipe
+      JOIN recipeingredient
+      ON recipe.id=recipeingredient.recipeid
+      JOIN ingredient
+      ON recipeingredient.ingredientid=ingredient.id
       WHERE recipe.id=${id};
     `)
   );
-  res.send(getDetails);
+  const meals = await pool.connect((connection) =>
+    connection.many(sql`
+      SELECT meal.name
+      FROM recipe
+      JOIN recipemeal
+      ON recipe.id=recipemeal.recipeid
+      JOIN meal
+      ON recipemeal.mealid=meal.id
+      WHERE recipe.id=${id}
+    `)
+  )
+  const recipeWithDetails = {recipe: recipe, ingredients: ingredients, meals: meals}
+  res.send(recipeWithDetails);
 });
 
 app.post(
@@ -98,7 +116,6 @@ app.post(
     }
     const recipe: { name: string; method?: string; servings?: number } =
       req.body;
-    console.log("nak", recipe);
     const addRecipe = await pool.connect((connection) =>
       connection.query(sql`
         INSERT INTO recipe (name, method, servings)
