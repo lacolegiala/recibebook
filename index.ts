@@ -5,6 +5,7 @@ import {
   createPool, sql,
 } from 'slonik';
 import * as dotenv from "dotenv";
+import { body, validationResult } from 'express-validator';
 
 dotenv.config()
 
@@ -87,38 +88,66 @@ app.get('/recipes/:id/details', async (req, res) => {
   res.send(getDetails)
 })
 
-app.post('/recipes', async (req, res) => {
-  const recipe: {name: string, method: string, servings: number} = req.body
-  const addRecipe = await pool.connect((connection) => 
-    connection.query(sql`
-      INSERT INTO recipe (name, method, servings)
-      VALUES (${recipe.name}, ${recipe.method}, ${recipe.servings})
-    `)
-  )
-  res.send(addRecipe)
-})
+app.post(
+  '/recipes',
+  body('name').isString(),
+  body('method').optional().isString(),
+  body('servings').optional().isInt(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const recipe: {name: string, method?: string, servings?: number} = req.body
+    console.log('nak', recipe)
+    const addRecipe = await pool.connect((connection) => 
+      connection.query(sql`
+        INSERT INTO recipe (name, method, servings)
+        VALUES (${recipe.name}, ${recipe.method ?? null}, ${recipe.servings ?? null})
+      `)
+    )
+    res.send(addRecipe)
+  }
+)
 
-app.post('/ingredients', async (req, res) => {
-  const ingredient: {name: string, foodGroup: string} = req.body
-  const addIngredient = await pool.connect((connection) =>
-    connection.query(sql`
-      INSERT INTO ingredient (name, foodGroup)
-      VALUES (${ingredient.name}, ${ingredient.foodGroup})
-    `)
-  )
-  res.send(addIngredient)
-})
+app.post(
+  '/ingredients',
+  body('name').isString(),
+  body('foodGroup').optional().isString(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const ingredient: {name: string, foodGroup?: string} = req.body
+    const addIngredient = await pool.connect((connection) =>
+      connection.query(sql`
+        INSERT INTO ingredient (name, foodGroup)
+        VALUES (${ingredient.name}, ${ingredient.foodGroup ?? null})
+      `)
+    )
+    res.send(addIngredient)
+  }
+)
 
-app.post('/meals', async (req, res) => {
-  const meal: {name: string} = req.body
-  const addMeal = await pool.connect((connection) =>
-    connection.query(sql`
-      INSERT INTO meal (name)
-      VALUES (${meal.name})
-    `)
-  )
-  res.send(addMeal)
-})
+app.post(
+  '/meals',
+  body('name').isString(),
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const meal: {name: string} = req.body
+    const addMeal = await pool.connect((connection) =>
+      connection.query(sql`
+        INSERT INTO meal (name)
+        VALUES (${meal.name})
+      `)
+    )
+    res.send(addMeal)
+  }
+)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
