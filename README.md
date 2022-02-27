@@ -48,7 +48,7 @@ Creates a new ingredient.
 
 Creates a new meal.
 
-### Steps to run locally
+## Steps to run locally
 
 After cloning the project, run the following commands in the root of the project:
 
