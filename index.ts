@@ -11,7 +11,7 @@ app.use(express.json());
 
 let connectionString: string;
 if (process.env.DATABASE_URL) {
-  connectionString = process.env.DATABASE_URL;
+  connectionString = process.env.DATABASE_URL.concat('?ssl=1');
 } else {
   throw new Error("Connection string environment variable is not set");
 }
