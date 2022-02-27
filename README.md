@@ -48,3 +48,19 @@ Creates a new ingredient.
 
 Creates a new meal.
 
+### Steps to run locally
+
+After cloning the project, run the following commands in the root of the project:
+
+`npm install`
+
+`touch .env`
+
+Then, in your editor, give the PG_CONNECTION_STRING a value in .env:
+
+`PG_CONNECTION_STRING=<your_database_address_here>`
+
+Then, you can start the project in the root of the project:
+
+`npm start`
+
