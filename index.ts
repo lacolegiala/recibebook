@@ -1,6 +1,4 @@
 import express from "express";
-const app = express();
-const port = process.env.PORT || 3000;
 import { body, validationResult } from "express-validator";
 import {
   createIngredient,
@@ -15,6 +13,9 @@ import {
   getRecipeWithId,
 } from "./database";
 import { Ingredient, Meal, Recipe } from "./types";
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
