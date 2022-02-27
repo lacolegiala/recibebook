@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 import { createPool, sql } from "slonik";
 import * as dotenv from "dotenv";
 import { body, validationResult } from "express-validator";
