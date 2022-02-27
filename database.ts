@@ -13,20 +13,14 @@ if (process.env.PG_CONNECTION_STRING) {
 
 const pool = createPool(connectionString);
 
-export const getAllRecipes = () => 
-  pool.connect((connection) =>
-    connection.many(sql`SELECT * FROM recipe`)
-  );
+export const getAllRecipes = () =>
+  pool.connect((connection) => connection.many(sql`SELECT * FROM recipe`));
 
-export const getAllIngredients = () => 
-  pool.connect((connection) =>
-    connection.many(sql`SELECT * FROM ingredient`)
-  );
+export const getAllIngredients = () =>
+  pool.connect((connection) => connection.many(sql`SELECT * FROM ingredient`));
 
-export const getAllMeals = () => 
-  pool.connect((connection) =>
-  connection.many(sql`SELECT * FROM meal`)
-  );
+export const getAllMeals = () =>
+  pool.connect((connection) => connection.many(sql`SELECT * FROM meal`));
 
 export const getIngredientWithId = (id: string) =>
   pool.connect((connection) =>
@@ -66,7 +60,7 @@ export const getRecipeMeals = (id: string) =>
       ON recipemeal.mealid=meal.id
       WHERE recipe.id=${id}
     `)
-  )
+  );
 
 export const createRecipe = (recipe: Recipe) =>
   pool.connect((connection) =>
@@ -86,7 +80,7 @@ export const createIngredient = (ingredient: Ingredient) =>
     `)
   );
 
-export const createMeal = (meal: Meal) => 
+export const createMeal = (meal: Meal) =>
   pool.connect((connection) =>
     connection.query(sql`
       INSERT INTO meal (name)
