@@ -10,8 +10,8 @@ dotenv.config();
 app.use(express.json());
 
 let connectionString: string;
-if (process.env.PG_CONNECTION_STRING) {
-  connectionString = process.env.PG_CONNECTION_STRING;
+if (process.env.DATABASE_URL) {
+  connectionString = process.env.DATABASE_URL;
 } else {
   throw new Error("Connection string environment variable is not set");
 }
