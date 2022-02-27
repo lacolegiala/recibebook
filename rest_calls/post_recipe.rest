@@ -1,4 +1,4 @@
-POST http://localhost:3000/recipes
+POST https://glacial-taiga-62544.herokuapp.com/recipes
 content-type: application/json
 
 {
