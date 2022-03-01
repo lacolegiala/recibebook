@@ -2,7 +2,7 @@ POST https://glacial-taiga-62544.herokuapp.com/recipes
 content-type: application/json
 
 {
-  "name": "valkosipuliperunat",
-  "method": "Sekoita ainekset keskenään uunivuoassa ja paista uunissa 45 min.",
+  "name": "pinaattilätys",
+  "method": "Sekoita ainekset keskenään ja paista.",
   "servings": 6
 }
